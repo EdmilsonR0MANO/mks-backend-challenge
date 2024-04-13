@@ -46,7 +46,11 @@ export class MoviesController {
   @UseGuards(JwtAuthGuard)
   update(
     @Param("id") id: string,
-    @Body(new ValidationPipe({ transform: true }), AtLeastOneFieldValidationPipe) updateMovieDto: UpdateMovieDto,
+    @Body(
+      new ValidationPipe({ transform: true }),
+      AtLeastOneFieldValidationPipe,
+    )
+    updateMovieDto: UpdateMovieDto,
   ) {
     return this.moviesService.update(id, updateMovieDto);
   }

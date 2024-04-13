@@ -1,10 +1,15 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { CreateMovieDto } from "../dto/create-movie.dto";
 import { UpdateMovieDto } from "../dto/update-movie.dto";
 import { Repository } from "typeorm";
 import { Movie } from "../entities/movie.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "src/users/entities/user.entity";
+import * as validate from 'uuid-validate';
 
 @Injectable()
 export class MoviesService {
@@ -14,8 +19,8 @@ export class MoviesService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
-  async create(createFilmDto: CreateMovieDto, userId: number): Promise<Movie> {
-    const { title, description, releaseYear } = createFilmDto;
+  async create(createMovieDto: CreateMovieDto, userId: number): Promise<Movie> {
+    const { title, description, releaseYear } = createMovieDto;
 
     const user = await this.userRepository.findOne({ where: { id: userId } });
 
@@ -41,27 +46,27 @@ export class MoviesService {
     });
   }
 
-  async update(id: string, updateMovieDto: UpdateMovieDto): Promise<Movie> {
-    const movie = await this.movieRepository.findOne({
-      where: {
-        id: id,
-      },
-    });
+  async update(id: string, updateMovieDto: UpdateMovieDto): Promise<Movie | string> {
+    const isValidUUID = validate(id);
+    if (!isValidUUID) {
+      throw new BadRequestException(`Invalid movie ID format`);
+    }
+    
+    let movie = await this.movieRepository.findOne({ where: { id } });
   
     if (!movie) {
-      return null;
+      throw new NotFoundException(`Movie with ID '${id}' not found`);
     }
   
-    Object.keys(updateMovieDto).forEach(key => {
-      if (updateMovieDto[key] !== undefined) {
-        movie[key] = updateMovieDto[key];
-      }
-    });
+    movie = this.movieRepository.merge(movie, updateMovieDto);
   
-    return this.movieRepository.save(movie);
+    movie = await this.movieRepository.save(movie);
+  
+    return movie;
   }
+  
 
-  async remove(id: string): Promise<boolean> {
+  async remove(id: string): Promise<object> {
     const movie = await this.movieRepository.findOne({
       where: {
         id: id,
@@ -69,9 +74,13 @@ export class MoviesService {
     });
 
     if (!movie) {
-      return false;
+      throw new NotFoundException(`Movie with ID '${id}' not found`);
     }
+
     await this.movieRepository.remove(movie);
-    return true;
+    return {
+      status: 200,
+      message: 'delete movie'
+    };
   }
 }

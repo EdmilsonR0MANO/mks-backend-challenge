@@ -14,27 +14,25 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  signin(user: User): string {
+  async signin(username: string, password: string): Promise<string> {
+    const user = await this.userService.findOne(username);
+
+    if (!user) {
+      throw new Error("Usuário não encontrado");
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      throw new Error("Senha incorreta");
+    }
+
     const payload: UserPayload = {
       sub: user.id,
       username: user.username,
     };
 
     return this.jwtService.sign(payload);
-  }
-
-  async validateUserCredentials(
-    username: string,
-    password: string,
-  ): Promise<any> {
-    const user = await this.userService.findOne(username);
-
-    if (user && user.password === password) {
-      const { password, ...result } = user;
-      console.log(result);
-      return result;
-    }
-    return null;
   }
 
   async validateUser(username: string, password: string) {
