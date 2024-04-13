@@ -25,7 +25,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async signin(@Body(ValidationPipe) signinDto: SignInDto) {
     const { username, password } = signinDto;
-    const token = await this.authService.signin(username, password);
+    const token = await this.authService.signIn(username, password);
     return { token };
   }
 
@@ -33,6 +33,6 @@ export class AuthController {
   @Post("signup")
   @HttpCode(HttpStatus.CREATED)
   async register(@Body(ValidationPipe) createUserDto: CreateUserDto) {
-    return this.authService.signup(createUserDto);
+    return this.authService.signUp(createUserDto);
   }
 }

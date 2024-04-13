@@ -1,5 +1,3 @@
-// jwt-user.interceptor.ts
-
 import {
   Injectable,
   NestInterceptor,

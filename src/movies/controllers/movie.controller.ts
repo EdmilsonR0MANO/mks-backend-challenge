@@ -58,6 +58,6 @@ export class MoviesController {
   @Delete("delete/:id")
   @UseGuards(JwtAuthGuard)
   remove(@Param("id") id: string) {
-    return this.moviesService.remove(id);
+    return this.moviesService.delete(id);
   }
 }

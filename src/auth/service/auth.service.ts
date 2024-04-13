@@ -14,17 +14,17 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async signin(username: string, password: string): Promise<string> {
+  async signIn(username: string, password: string): Promise<string> {
     const user = await this.userService.findOne(username);
 
     if (!user) {
-      throw new Error("Usuário não encontrado");
+      throw new Error("User not found");
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      throw new Error("Senha incorreta");
+      throw new Error("Invalid password");
     }
 
     const payload: UserPayload = {
@@ -48,10 +48,10 @@ export class AuthService {
         };
       }
     }
-    throw new Error("deu ruim no validUser");
+    throw new Error("Invalid user");
   }
 
-  async signup(
+  async signUp(
     createUserDto: CreateUserDto,
   ): Promise<{ token: string; message: string; status: number }> {
     try {

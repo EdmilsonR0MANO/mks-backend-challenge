@@ -1,5 +1,3 @@
-// user-id.decorator.ts
-
 import { createParamDecorator, ExecutionContext } from "@nestjs/common";
 
 export const UserId = createParamDecorator(
