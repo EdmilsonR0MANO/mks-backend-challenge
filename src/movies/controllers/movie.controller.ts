@@ -16,12 +16,14 @@ import { UpdateMovieDto } from "../dto/update-movie.dto";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth-guard";
 import { UserId } from "../decorators/user-is.decorator";
 import { AtLeastOneFieldValidationPipe } from "../pipes/at-least-one-field-validation.pipe";
-
+import { ApiBody, ApiTags } from "@nestjs/swagger";
+@ApiTags("movies")
 @Controller("movies")
 export class MoviesController {
   constructor(private readonly moviesService: MoviesService) {}
 
   @Post("create")
+  @ApiBody({type: CreateMovieDto})
   @UseGuards(JwtAuthGuard)
   async create(
     @UserId() userId: number,
@@ -42,7 +44,8 @@ export class MoviesController {
     return this.moviesService.findOne(id);
   }
 
-  @Put("read/:id")
+  @Put("update/:id")
+  @ApiBody({ type: UpdateMovieDto })
   @UseGuards(JwtAuthGuard)
   update(
     @Param("id") id: string,

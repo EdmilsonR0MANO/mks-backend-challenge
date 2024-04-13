@@ -1,4 +1,12 @@
-import { PartialType } from "@nestjs/mapped-types";
-import { CreateMovieDto } from "./create-movie.dto";
+import { ApiProperty } from '@nestjs/swagger';
 
-export class UpdateMovieDto extends PartialType(CreateMovieDto) {}
+export class UpdateMovieDto {
+  @ApiProperty({ required: false })
+  readonly title?: string;
+
+  @ApiProperty({ required: false })
+  readonly description?: string;
+
+  @ApiProperty({ required: false })
+  readonly releaseYear?: number;
+}
