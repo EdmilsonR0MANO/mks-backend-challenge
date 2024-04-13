@@ -15,6 +15,7 @@ import { CreateMovieDto } from "../dto/create-movie.dto";
 import { UpdateMovieDto } from "../dto/update-movie.dto";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth-guard";
 import { UserId } from "../decorators/user-is.decorator";
+import { AtLeastOneFieldValidationPipe } from "../pipes/at-least-one-field-validation.pipe";
 
 @Controller("movies")
 export class MoviesController {
@@ -43,7 +44,10 @@ export class MoviesController {
 
   @Put("read/:id")
   @UseGuards(JwtAuthGuard)
-  update(@Param("id") id: string, @Body() updateMovieDto: UpdateMovieDto) {
+  update(
+    @Param("id") id: string,
+    @Body(new ValidationPipe({ transform: true }), AtLeastOneFieldValidationPipe) updateMovieDto: UpdateMovieDto,
+  ) {
     return this.moviesService.update(id, updateMovieDto);
   }
 
