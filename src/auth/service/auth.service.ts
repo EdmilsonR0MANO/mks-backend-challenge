@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from 'src/users/service/users.service';
 import { User } from 'src/users/entities/user.entity';
 import { UserToken } from '../models/UserToken';
 import { UserPayload } from '../models/UserPayload';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -13,18 +14,13 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  login(user: User): UserToken {
+  signin(user: User): string {
     const payload: UserPayload = {
       sub: user.id,
       username: user.username,
     };
 
-    const jwtToken = this.jwtService.sign(payload);
-
-    return {
-      access_token: jwtToken,
-      user: user,
-    };
+    return this.jwtService.sign(payload);
   }
 
   async validateUserCredentials(
@@ -56,4 +52,28 @@ export class AuthService {
     }
     throw new Error('deu ruim no validUser');
   }
+
+  async signup(createUserDto: CreateUserDto): Promise<{ token: string, message: string, status: number }> {
+    try {
+      const createdUser = await this.userService.create(createUserDto);
+      const token = this.generateAccessToken(createdUser);
+
+      return {
+        status: 201,
+        token,
+        message: 'User created successfully',
+      };
+    } catch (error) {
+      if (error.code === '23505') { 
+        throw new ConflictException('Username already exists');
+      }
+      throw error; 
+    }
+  }
+
+  private generateAccessToken(user: User): string {
+    const payload = { sub: user.id, username: user.username };
+    return this.jwtService.sign(payload);
+  }
+
 }
