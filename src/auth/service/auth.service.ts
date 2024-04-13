@@ -1,11 +1,11 @@
-import { ConflictException, Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
-import { UsersService } from 'src/users/service/users.service';
-import { User } from 'src/users/entities/user.entity';
-import { UserToken } from '../models/UserToken';
-import { UserPayload } from '../models/UserPayload';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { ConflictException, Injectable } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import * as bcrypt from "bcrypt";
+import { UsersService } from "src/users/service/users.service";
+import { User } from "src/users/entities/user.entity";
+import { UserToken } from "../models/UserToken";
+import { UserPayload } from "../models/UserPayload";
+import { CreateUserDto } from "src/users/dto/create-user.dto";
 
 @Injectable()
 export class AuthService {
@@ -50,10 +50,12 @@ export class AuthService {
         };
       }
     }
-    throw new Error('deu ruim no validUser');
+    throw new Error("deu ruim no validUser");
   }
 
-  async signup(createUserDto: CreateUserDto): Promise<{ token: string, message: string, status: number }> {
+  async signup(
+    createUserDto: CreateUserDto,
+  ): Promise<{ token: string; message: string; status: number }> {
     try {
       const createdUser = await this.userService.create(createUserDto);
       const token = this.generateAccessToken(createdUser);
@@ -61,13 +63,13 @@ export class AuthService {
       return {
         status: 201,
         token,
-        message: 'User created successfully',
+        message: "User created successfully",
       };
     } catch (error) {
-      if (error.code === '23505') { 
-        throw new ConflictException('Username already exists');
+      if (error.code === "23505") {
+        throw new ConflictException("Username already exists");
       }
-      throw error; 
+      throw error;
     }
   }
 
@@ -75,5 +77,4 @@ export class AuthService {
     const payload = { sub: user.id, username: user.username };
     return this.jwtService.sign(payload);
   }
-
 }
