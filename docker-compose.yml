@@ -12,11 +12,18 @@ services:
       - DB_NAME=${DB_NAME}
     depends_on:
       - postgres
+    networks: 
+      - project_network
   postgres:
     image: postgres
+    restart: always
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
       - "5432:5432"
+    networks: 
+      - project_network
+networks:
+  project_network: 
