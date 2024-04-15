@@ -1,6 +1,7 @@
 version: '3.8'
 services:
   app:
+    network_mode: "host"
     build: .
     ports:
       - "3000:3000"
@@ -12,8 +13,6 @@ services:
       - DB_NAME=${DB_NAME}
     depends_on:
       - postgres
-    networks: 
-      - project_network
   postgres:
     image: postgres
     restart: always
@@ -21,9 +20,9 @@ services:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
+      PGDATA: /var/lib/postgresql/data/pgdata 
     ports:
       - "5432:5432"
-    networks: 
-      - project_network
-networks:
-  project_network: 
+    network_mode: "host"
+    volumes: 
+      - ./.docker-data/postgres/data:/var/lib/postgresql/data

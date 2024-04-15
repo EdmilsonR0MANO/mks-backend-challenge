@@ -1,23 +1,61 @@
-# Use a imagem base do Node.js
-FROM node:latest
+###################
+# BUILD FOR LOCAL DEVELOPMENT
+###################
 
-# Defina o diretório de trabalho dentro do contêiner
-WORKDIR /app
+FROM node:20-alpine As development
 
-# Copie o arquivo package.json e yarn.lock para o diretório de trabalho
-COPY package*.json ./
+# Create app directory
+WORKDIR /usr/src/app
 
-# Instale as dependências do projeto
-RUN npm install
+# Copy application dependency manifests to the container image.
+# A wildcard is used to ensure copying both package.json AND package-lock.json (when available).
+# Copying this first prevents re-running npm install on every code change.
+COPY --chown=node:node package*.json ./
 
-# Copie o resto do código-fonte para o diretório de trabalho
-COPY . .
+# Install app dependencies using the `npm ci` command instead of `npm install`
+RUN npm ci
 
-# Compile o código TypeScript para JavaScript
+# Bundle app source
+COPY --chown=node:node . .
+
+# Use the node user from the image (instead of the root user)
+USER node
+
+###################
+# BUILD FOR PRODUCTION
+###################
+
+FROM node:20-alpine As build
+
+WORKDIR /usr/src/app
+
+COPY --chown=node:node package*.json ./
+
+# In order to run `npm run build` we need access to the Nest CLI which is a dev dependency. In the previous development stage we ran `npm ci` which installed all dependencies, so we can copy over the node_modules directory from the development image
+COPY --chown=node:node --from=development /usr/src/app/node_modules ./node_modules
+
+COPY --chown=node:node . .
+
+# Run the build command which creates the production bundle
 RUN npm run build
 
-# Exponha a porta em que sua aplicação será executada
-EXPOSE 3000
+# Set NODE_ENV environment variable
+ENV NODE_ENV production
 
-# Comando para iniciar a aplicação
-CMD ["node", "dist/main.js"]
+# Running `npm ci` removes the existing node_modules directory and passing in --only=production ensures that only the production dependencies are installed. This ensures that the node_modules directory is as optimized as possible
+RUN npm ci --only=production && npm cache clean --force
+
+USER node
+
+###################
+# PRODUCTION
+###################
+
+FROM node:20-alpine As production
+
+# Copy the bundled code from the build stage to the production image
+COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
+COPY --chown=node:node --from=build /usr/src/app/dist ./dist
+
+# Start the server using the production build
+CMD [ "node", "dist/main.js" ]
