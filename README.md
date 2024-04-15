@@ -1,38 +1,32 @@
-Diretrizes do desafio
-===========================
-
-Por favor organize, design, teste, faça a documentação e deploy do seu código da forma como se ele fosse para produção, depois nos envie um link do repositório no Github.
-
-Tarefa (funcional)
----------------
-
-1. Desenvolva um sistema de autenticação JWT.
-2. Você deve construir uma CRUD de um catálogo de filmes. Todos os endpoints dessa CRUD só devem ser consumidos por um usuário autenticado.
-
-Ferramentas requeridas
----------------
-
-1. TypeScript
-2. Nest.js
-3. TypeORM
-4. Swagger
-5. Docker
-6. Redis
-7. PostgreSQL
-
-Aspectos técnicos
----------------
-
-A arquitetura deve ser composta de uma aplicação provendo uma API RESTful em JSON, utilize do Redis como seu cache.
-
-OBS: Lembre-se de validar a informação tratada em cada endpoint.
-
-Back-end
----------------
-
-Engenharia de qualidade é saber utilizar da ferramenta certa para o trabalho certo, e seguir aprendendo constantemente sobre ela. Sabendo disso, sinta-se livre para mencionar no `README` quanto tempo de experiência você possui com cada uma delas, fazendo isso levaremos em consideração ao avaliar seu desafio. 
-
-Faça o deploy!
----------------
-
-Ao finalizar, faça o deploy no lugar que te for mais confortável (exemplo: Amazon EC2, Heroku, Netlify, Google AppEngine, etc)
+MKS-BACKEND-CHALLENGE
+Bom dia/tarde/noite, me chamo Edmilson Romano, tenho 20 anos e abaixo estão as instruções para rodar este projeto!
+Tempo de experiência:
+STACK UTILIZADA NO PROJETO:
+TypeScript - 10 mesês de experiência
+PostgreSQL - 10 mesês de experiência
+TypeORM - 6 mesês de experiência
+Nestjs - 10 mesês de experiência
+Docker - 10 mesês de experiência
+Swagger - 3 dias de experiência 
+AWS - 3 mesês.
+LINKS:
+REPOSITÓRIO GITHUB:
+https://github.com/EdmilsonR0MANO/mks-backend-challenge
+API EM PRODUÇÃO:
+http://15.228.170.50:3000:3000/ ( url base )
+http://15.228.170.50:3000/api ( url para acessar a documentação e os endpoints da API )
+API LOCAL:
+http://localhost:3000/ ( url local base )
+http://localhost:3000/api ( url local para acessar a documentação e os endpoints da API )
+TESTES EM PRODUÇÃO:
+Caso queira testar minha aplicação sem precisar rodar nada no seu computador, basta entrar na documentação e acessar os endpoints.
+TESTES LOCALMENTE:
+Para rodar a aplicação na sua máquina, basta seguir os passos abaixo:
+Primeiro, clone o repositório na sua máquina acessando o repositório;
+Após isso, dentro da pasta do projeto, abra o terminal e rode o seguinte comando:
+yarn install ou npm install
+node --version
+Ao abrir o projeto no seu editor de código, abra o arquivo Dockerfile e garanta que a versão node que está instalada na sua máquina é a mesma que o output do código acima, isso vai garantir que as dependências de desenvolvimento que você instalou localmente vão estar na mesma versão das que o docker vai utilizar.
+Após isso, mais comandos no terminal:
+docker-compose up --build ( não esqueça de adicionar o prefixo de privilégios de usuário para poder executar caso esteja utilizando um sistema operacional de distribuição linux ou macOS ( sudo, brew, etc... ))
+E pronto! Aplicação local rodando, agora é só acessar a documentação e consumir os endpoints
