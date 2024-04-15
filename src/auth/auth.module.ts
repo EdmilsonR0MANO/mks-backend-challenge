@@ -5,7 +5,6 @@ import { UsersModule } from "src/users/users.module";
 import { AuthService } from "./service/auth.service";
 import { AuthController } from "./controller/auth.controller";
 import { JwtAuthGuard } from "./guards/jwt-auth-guard";
-
 import { JwtStrategy } from "./strategies/jwt-strategy";
 import { LocalStrategy } from "./strategies/local.strategy";
 

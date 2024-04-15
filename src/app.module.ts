@@ -16,7 +16,7 @@ import { MoviesModule } from "./movies/movies.module";
       port: 5432,
       username: "admin",
       password: "password",
-      database: "mydatabase",
+      database: "mks-backend",
       entities: [User, Movie],
       synchronize: true,
     }),

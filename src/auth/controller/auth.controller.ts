@@ -7,6 +7,7 @@ import {
   UseGuards,
   Body,
   ValidationPipe,
+  UseInterceptors,
 } from "@nestjs/common";
 import { AuthService } from "../service/auth.service";
 import { IsPublic } from "../decorators/is-public.decorator";
@@ -27,6 +28,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async signin(@Body(ValidationPipe) signinDto: SignInDto) {
     const { username, password } = signinDto;
+    console.log('jaja')
     const token = await this.authService.signIn(username, password);
     return { token };
   }
