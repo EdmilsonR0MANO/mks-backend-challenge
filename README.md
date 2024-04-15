@@ -31,3 +31,22 @@ Caso queira testar a aplicação em produção, basta acessar os endpoints atrav
 Para rodar a aplicação localmente, siga estas instruções:
 
 1. Clone o repositório:
+
+2. Instale as dependências:
+
+3. Verifique a versão do Node:
+
+
+4. Garanta que a versão do Node no Dockerfile corresponde à sua versão local.
+
+5. Execute o comando Docker Compose:
+
+
+Certifique-se de adicionar o prefixo de privilégios de usuário se estiver utilizando um sistema operacional de distribuição Linux ou macOS.
+
+6. Acesse a documentação e consuma os endpoints localmente.
+
+Qualquer dúvida ou feedback, fique à vontade para entrar em contato!
+
+
+
